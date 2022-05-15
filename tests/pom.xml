@@ -30,7 +30,6 @@
   <properties>
     <groovy.version>2.5.8</groovy.version>
   </properties>
-
   <modules>
     <module>shaded</module>
     <module>docker-images</module>
@@ -51,6 +50,19 @@
         <configuration>
           <skip>true</skip>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>report</id>
+            <goals>
+              <goal>report-aggregate</goal>
+            </goals>
+            <phase>verify</phase>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
