@@ -130,7 +130,15 @@
   </build>
 
   <profiles>
-    <profile>
+
+                            <profile>
+                                <id>ba-dua</id>
+                                <properties>
+                                    <argLine>-javaagent:/home/utente/ba-dua/ba-dua-agent-rt-0.7.0-all.jar -Doutput.file=target/badua.ser</argLine>
+                                </properties>
+                            </profile>
+
+                        <profile>
       <id>integrationTests</id>
       <activation>
         <property>

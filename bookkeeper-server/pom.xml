@@ -24,6 +24,7 @@
   </parent>
   <artifactId>bookkeeper-server</artifactId>
   <name>Apache BookKeeper :: Server</name>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.bookkeeper</groupId>
@@ -294,7 +295,7 @@
     </plugins>
   </build>
   <profiles>
-    <profile>
+                        <profile>
       <id>vertx-http-server</id>
       <dependencies>
         <dependency>
@@ -328,6 +329,7 @@
         </plugins>
       </build>
     </profile>
+
     <!-- test profiles -->
     <profile>
       <id>skipBookKeeperServerTests</id>
