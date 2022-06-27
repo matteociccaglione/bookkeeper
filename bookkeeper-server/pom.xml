@@ -295,6 +295,20 @@
     </plugins>
   </build>
   <profiles>
+    <profile>
+      <id>ba-dua</id>
+      <properties>
+        <argLine>-javaagent:/home/utente/ba-dua/ba-dua-agent-rt-0.7.0-all.jar -Doutput.file=target/badua.ser</argLine>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
                         <profile>
       <id>vertx-http-server</id>
       <dependencies>
