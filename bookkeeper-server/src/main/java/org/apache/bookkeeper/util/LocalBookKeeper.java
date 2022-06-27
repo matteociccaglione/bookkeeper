@@ -143,25 +143,25 @@ public class LocalBookKeeper implements AutoCloseable {
         LOG.info("Instantiate ZK Client");
         //initialize the zk client with values
         try (ZooKeeperClient zkc = ZooKeeperClient.newBuilder()
-                    .connectString(zkHost + ":" + zkPort)
-                    .sessionTimeoutMs(zkSessionTimeOut)
-                    .build()) {
+                .connectString(zkHost + ":" + zkPort)
+                .sessionTimeoutMs(zkSessionTimeOut)
+                .build()) {
             String zkLedgersRootPath = ZKMetadataDriverBase.resolveZkLedgersRootPath(baseConf);
             ZkUtils.createFullPathOptimistic(zkc, zkLedgersRootPath, new byte[0], Ids.OPEN_ACL_UNSAFE,
                     CreateMode.PERSISTENT);
             List<Op> multiOps = Lists.newArrayListWithExpectedSize(2);
             multiOps.add(
-                Op.create(zkLedgersRootPath + "/" + AVAILABLE_NODE,
-                    new byte[0], Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT));
+                    Op.create(zkLedgersRootPath + "/" + AVAILABLE_NODE,
+                            new byte[0], Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT));
             multiOps.add(
-                Op.create(zkLedgersRootPath + "/" + AVAILABLE_NODE + "/" + READONLY,
-                    new byte[0], Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT));
+                    Op.create(zkLedgersRootPath + "/" + AVAILABLE_NODE + "/" + READONLY,
+                            new byte[0], Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT));
             zkc.multi(multiOps);
             // No need to create an entry for each requested bookie anymore as the
             // BookieServers will register themselves with ZooKeeper on startup.
         } catch (KeeperException e) {
             LOG.error("Exception while creating znodes", e);
-            throw new IOException("Error creating znodes : ", e);
+            throw new IOException("Error creating znodes : " + e.code().toString(), e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             LOG.error("Interrupted while creating znodes", e);
