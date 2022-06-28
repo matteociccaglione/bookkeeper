@@ -13,11 +13,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-
+@Ignore
 @RunWith(Parameterized.class)
-public class BookKeeperTest {
-    private static LocalBookKeeper bookKeeper;
-    private static BookKeeper client;
+public class BookKeeperTest extends BookKeeperTestBaseClass{
     private int ensSize;
     private int writeQuorumSize;
     private int ackQuorumSize;
@@ -33,32 +31,9 @@ public class BookKeeperTest {
         DELETE_FAIL
     }
 
-    private static void cleanDirectory(File dir){
-        File[] files = dir.listFiles();
-        if(files==null){
-            return;
-        }
-        if(files.length!=0){
-            for (File file: files){
-                if(file.isFile()){
-                    file.delete();
-                }
-                else if (file.isDirectory()){
-                    cleanDirectory(file);
-                }
-            }
-        }
-        dir.delete();
-    }
 
-    @BeforeClass
-    public static void startServer() throws Exception {
-        ServerConfiguration configuration = new ServerConfiguration();
-        configuration.setAllowLoopback(true);
-        bookKeeper = LocalBookKeeper.getLocalBookies("127.0.0.1",34567,3,true,configuration);
-        bookKeeper.start();
 
-    }
+
     public BookKeeperTest(int ensSize, int writeQuorumSize, int ackQuorumSize,BookKeeper.DigestType digestType, byte[] passwd, Map<String,byte[]> customMetadata, Type type ) throws BKException, IOException, InterruptedException {
         this.ensSize=ensSize;
         this.writeQuorumSize=writeQuorumSize;
@@ -67,7 +42,7 @@ public class BookKeeperTest {
         this.passwd=passwd;
         this.customMetadata=customMetadata;
         this.type=type;
-        client = new BookKeeper("127.0.0.1:34567");
+
     }
 
 
@@ -95,16 +70,16 @@ public class BookKeeperTest {
                 {0, 0, 0, BookKeeper.DigestType.MAC, "1010".getBytes(), nonEmptyMetadata, Type.CREATE},
                 //{-1, 0, 0, BookKeeper.DigestType.MAC, new byte[]{}, null, Type.CREATE_EX},
                 {0, -1, 0, BookKeeper.DigestType.MAC, "1010".getBytes(), null, Type.CREATE_EX},
-                //{-1, -1, 0, BookKeeper.DigestType.MAC, "1010".getBytes(), null, Type.CREATE_EX},
+                {-1, -1, 0, BookKeeper.DigestType.MAC, "1010".getBytes(), null, Type.CREATE_EX},
                 //{-2, -1, 0, BookKeeper.DigestType.MAC, new byte[]{}, null, Type.CREATE_EX},
                 {1, 0, -1, BookKeeper.DigestType.MAC, "1010".getBytes(), null, Type.CREATE},
                 {0, 0, -1, BookKeeper.DigestType.MAC, "1010".getBytes(), nonEmptyMetadata, Type.CREATE},
                 //{-1, 0, -1, BookKeeper.DigestType.MAC, "1010".getBytes(), null, Type.CREATE_EX},
                 {0, -1, -1, BookKeeper.DigestType.MAC, "1010".getBytes(), null, Type.CREATE},
-                //{-1, -1, -1, BookKeeper.DigestType.MAC, new byte[]{}, null, Type.CREATE_EX},
+                {-1, -1, -1, BookKeeper.DigestType.MAC, new byte[]{}, null, Type.CREATE_EX},
                 //{-2, -1, -1, BookKeeper.DigestType.MAC, "1010".getBytes(), null, Type.CREATE_EX},
-                //{-1, -2, -1, BookKeeper.DigestType.MAC, "1010".getBytes(), null, Type.CREATE_EX},
-                //{-2, -2, -1, BookKeeper.DigestType.MAC, "1010".getBytes(), new HashMap<String, byte[]>(), Type.CREATE_EX},
+                {-1, -2, -1, BookKeeper.DigestType.MAC, "1010".getBytes(), null, Type.CREATE_EX},
+                {-2, -2, -1, BookKeeper.DigestType.MAC, "1010".getBytes(), new HashMap<String, byte[]>(), Type.CREATE_EX},
                 //{-3, -2, -1, BookKeeper.DigestType.MAC, "1010".getBytes(), null, Type.CREATE_EX}
 
 
@@ -115,12 +90,7 @@ public class BookKeeperTest {
     }
 
 
-    @AfterClass
-    public static void closeServer() throws Exception {
-        client.close();
-        //this.bookKeeper.shutdownBookies();
-        bookKeeper.close();
-    }
+
 
     @Test
     public void testCreateLedger() throws BKException, InterruptedException {
@@ -174,7 +144,7 @@ public class BookKeeperTest {
         try{
             client.deleteLedger(lId);
             if(handle!=null){
-                CompletableFuture<Versioned<LedgerMetadata>> future = this.client.getLedgerManager().readLedgerMetadata(lId);
+                CompletableFuture<Versioned<LedgerMetadata>> future = client.getLedgerManager().readLedgerMetadata(lId);
                 try{
                     SyncCallbackUtils.waitForResult(future);
                 }catch(BKException.BKNoSuchLedgerExistsOnMetadataServerException e){
