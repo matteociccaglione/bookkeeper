@@ -154,6 +154,12 @@
       <scope>runtime</scope>
       <optional>true</optional>
     </dependency>
+    <dependency>
+      <groupId>org.pitest</groupId>
+      <artifactId>pitest-maven</artifactId>
+      <version>1.8.0</version>
+      <type>maven-plugin</type>
+    </dependency>
     <!-- testing dependencies -->
     <dependency>
       <groupId>org.apache.bookkeeper</groupId>
@@ -295,6 +301,43 @@
     </plugins>
   </build>
   <profiles>
+    <profile>
+      <id>pit</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-maven</artifactId>
+            <version>1.8.0</version>
+            <configuration>
+              <targetClasses>
+                <param>org.apache.bookkeeper.client.BookKeeper</param>
+               <!-- <param>org.apache.bookkeeper.net.NetworkTopologyImpl</param>-->
+              </targetClasses>
+              <targetTests>
+              <param>org.apache.bookkeeper.client.BookKeeperTest</param>
+                <param>org.apache.bookkeeper.client.BookKeeperCreateFailTest</param>
+                <param>org.apache.bookkeeper.client.BookKeeperDeleteTest</param>
+                <param>org.apache.bookkeeper.client.BookKeeperOpenLedgerFail</param>
+                <param>org.apache.bookkeeper.client.BookKeeperLedgerTest</param>
+                <!--<param>org.apache.bookkeeper.client.BookKeeperCreateTest</param>-->
+                <!--<param>org.apache.bookkeeper.net.NetworkTopologyImplTest</param>-->
+                <!--<param>org.apache.bookkeeper.net.NetworkImplTest</param>-->
+              </targetTests>
+            </configuration>
+            <executions>
+              <execution>
+                <id>Mutation Report</id>
+                <phase>test-compile</phase>
+                <goals>
+                  <goal>mutationCoverage</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     <profile>
       <id>ba-dua</id>
       <properties>

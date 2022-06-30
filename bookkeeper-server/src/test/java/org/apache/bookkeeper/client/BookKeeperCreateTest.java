@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
 @Ignore
 @RunWith(Parameterized.class)
 public class BookKeeperCreateTest extends BookKeeperTestBaseClass{
@@ -50,20 +51,13 @@ public class BookKeeperCreateTest extends BookKeeperTestBaseClass{
                 {2, 2, 1, BookKeeper.DigestType.CRC32, "1010".getBytes(), BookKeeperCreateTest.Type.CREATE},
                 {2, 1, 1, BookKeeper.DigestType.MAC, "1010".getBytes(), BookKeeperCreateTest.Type.CREATE},
                 {1, 1, 1, BookKeeper.DigestType.CRC32, new byte[]{}, BookKeeperCreateTest.Type.CREATE},
-                {1, 0, 1, BookKeeper.DigestType.MAC, "1010".getBytes(),BookKeeperCreateTest.Type.CREATE_EX},
-                {0, 0, 1, BookKeeper.DigestType.CRC32, "1010".getBytes(), BookKeeperCreateTest.Type.CREATE_EX},
                 {2, 1, 0, BookKeeper.DigestType.MAC, new byte[]{},  BookKeeperCreateTest.Type.CREATE},
                 {1, 1, 0, BookKeeper.DigestType.MAC, "1010".getBytes(), BookKeeperCreateTest.Type.CREATE},
                 {1, 0, 0, BookKeeper.DigestType.MAC, "1010".getBytes(), BookKeeperCreateTest.Type.CREATE},
                 {0, 0, 0, BookKeeper.DigestType.MAC, "1010".getBytes(),  BookKeeperCreateTest.Type.CREATE},
-                {0, -1, 0, BookKeeper.DigestType.MAC, "1010".getBytes(), BookKeeperCreateTest.Type.CREATE_EX},
-                {-1, -1, 0, BookKeeper.DigestType.MAC, "1010".getBytes(),  BookKeeperCreateTest.Type.CREATE_EX},
                 {1, 0, -1, BookKeeper.DigestType.MAC, "1010".getBytes(), BookKeeperCreateTest.Type.CREATE},
                 {0, 0, -1, BookKeeper.DigestType.MAC, "1010".getBytes(),  BookKeeperCreateTest.Type.CREATE},
                 {0, -1, -1, BookKeeper.DigestType.MAC, "1010".getBytes(),BookKeeperCreateTest.Type.CREATE},
-                {-1, -1, -1, BookKeeper.DigestType.MAC, new byte[]{},BookKeeperCreateTest.Type.CREATE_EX},
-                {-1, -2, -1, BookKeeper.DigestType.MAC, "1010".getBytes(),  BookKeeperCreateTest.Type.CREATE_EX},
-                {-2, -2, -1, BookKeeper.DigestType.MAC, "1010".getBytes(), BookKeeperCreateTest.Type.CREATE_EX}
 
         });
     }
@@ -107,15 +101,5 @@ public class BookKeeperCreateTest extends BookKeeperTestBaseClass{
         return  isCorrect;
     }
 
-    @Test
-    public void testCreateLedgerEx() throws BKException, InterruptedException {
-        Assume.assumeTrue(type==Type.CREATE_EX);
-        boolean isPassed=false;
-        try {
-            client.createLedger(ensSize, writeQuorumSize, ackQuorumSize, digestType, passwd);
-        }catch(Exception e){
-            isPassed=true;
-        }
-        Assert.assertTrue(isPassed);
-    }
+
 }
