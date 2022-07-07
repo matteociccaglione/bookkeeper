@@ -27,8 +27,8 @@ public class NetworkTopologyImplTest {
                 {new NodeBase("127.0.0.1:3456","/root/rack1"),new NodeBase("127.0.0.1:3457","/root/rack2")},
                 {null,new NodeBase("127.0.0.1:3457","/root/rack2")},
                 {null,null},
-                //{new NodeBase("127.0.0.1:6789","/root/rack1/rack2/rack3"),new NodeBase("127.0.0.1:6788","/root/rack1/rack4/rack5")},
-                //{new NodeBase("127.0.0.1:6789","/root/rack1/rack2/rack3"),new NodeBase("127.0.0.1:6789","/root/rack1/rack2/rack3")}
+                {new NodeBase("127.0.0.1:6789","/root/rack1/rack2/rack3"),new NodeBase("127.0.0.1:6788","/root/rack1/rack4/rack5")},
+                {new NodeBase("127.0.0.1:6789","/root/rack1/rack2/rack3"),new NodeBase("127.0.0.1:6789","/root/rack1/rack2/rack3")}
 
         });
 
@@ -47,7 +47,7 @@ public class NetworkTopologyImplTest {
         Assert.assertEquals(expected,result);
     }
 
-    @Ignore
+
     @Test
     public void testGetDistance() {
         this.impl.add(this.node1);

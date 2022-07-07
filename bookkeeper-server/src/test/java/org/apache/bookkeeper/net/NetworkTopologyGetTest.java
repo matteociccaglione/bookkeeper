@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-@Ignore
+
 @RunWith(Parameterized.class)
 public class NetworkTopologyGetTest {
     private String location;
@@ -38,29 +38,14 @@ public class NetworkTopologyGetTest {
                 {"/root",false,Type.TAKE_RACK},
                 {"/root",true,Type.TAKE_RACK},
                 {"/root/subroot/subsub",false,Type.DIVIDE},
+                {"/root",false,Type.DIVIDE},
+                //{"",false,Type.DIVIDE},
                 {"/root/127.0.0.1:33215",false,Type.GET_NODE},
                 {"/root/127.0.0.1:33215",true,Type.GET_NODE}
         });
     }
 
-    @Ignore
-    @Test
-    public void testGetDatanodesInRack(){
-        Assume.assumeTrue(type==Type.TAKE_RACK);
-        boolean isCorrect=false;
-        if(!empty) {
-            NodeBase node1 = new NodeBase(this.location + "/127.0.0.1:54673");
-            NodeBase node2 = new NodeBase(this.location + "/127.0.0.1:54672");
-            List<Node> nodes = this.impl.getDatanodesInRack(this.location);
-            isCorrect = nodes.size() == 2;
-            isCorrect = isCorrect && nodes.contains(node1) && nodes.contains(node2);
-        }
-        else{
-            List<Node> nodes = this.impl.getDatanodesInRack(this.location);
-            isCorrect= nodes.isEmpty();
-        }
-        Assert.assertTrue(isCorrect);
-    }
+
 
 
     @Test
